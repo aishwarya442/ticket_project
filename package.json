@@ -1,0 +1,10 @@
+{
+  "name": "ticket-project-root",
+  "private": true,
+  "scripts": {
+    "start": "npx concurrently \"python manage.py runserver 8000\" \"npm start --prefix frontend\""
+  },
+  "dependencies": {
+    "localtunnel": "^2.0.2"
+  }
+}
