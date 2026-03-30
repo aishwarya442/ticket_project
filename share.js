@@ -4,7 +4,7 @@ const path = require('path');
 
 (async () => {
     console.log("Starting global share links for your Drama Tickets App...");
-    
+
     try {
         // 1. Tunnel the Backend Database (Port 8000)
         const backendTunnel = await localtunnel({ port: 8000 });
@@ -13,14 +13,14 @@ const path = require('path');
         // 2. Temporarily rewrite AppContext.js to point to the secure public backend URL
         const appContextPath = path.join(__dirname, 'frontend', 'src', 'context', 'AppContext.js');
         let appData = fs.readFileSync(appContextPath, 'utf8');
-        
+
         // Backup original 
         if (!fs.existsSync(appContextPath + '.backup')) {
             fs.writeFileSync(appContextPath + '.backup', appData);
         } else {
             appData = fs.readFileSync(appContextPath + '.backup', 'utf8');
         }
-        
+
         // Replace the API base URL with the new public one
         appData = appData.replace(/baseURL: `http:\/\/\$\{window\.location\.hostname\}:8000\/api\/`,/, `baseURL: '${backendTunnel.url}/api/',`);
         fs.writeFileSync(appContextPath, appData);

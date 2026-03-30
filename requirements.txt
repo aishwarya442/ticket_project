@@ -1,9 +1,4 @@
-Django>=4.0
-djangorestframework
-django-cors-headers
-djangorestframework-simplejwt
-gunicorn
-whitenoise
-dj-database-url
-psycopg2-binary
+# No backend dependencies needed - using Google Sheets!
+# If you need to run any Python utilities, add packages here
 python-dotenv
+requests

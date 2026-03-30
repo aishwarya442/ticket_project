@@ -14,3 +14,6 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ticket_project.settings')
 
 application = get_wsgi_application()
+
+# Vercel needs this alias to boot the serverless API correctly
+app = application
