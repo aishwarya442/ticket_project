@@ -1,0 +1,121 @@
+.payment-page {
+  padding: 3rem 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.payment-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.payment-summary {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.payment-summary h2, .payment-methods h2 {
+  margin-bottom: 1.5rem;
+  color: var(--accent-color);
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+.summary-item span:last-child {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.summary-item.total {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed var(--border-color);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.summary-item.total span:last-child {
+  color: var(--primary-color);
+}
+
+.payment-instruction {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.qr-wrapper {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  margin-bottom: 1rem;
+}
+
+.upi-id {
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.payment-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: var(--text-secondary);
+}
+
+.upload-label:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background: rgba(229, 9, 20, 0.05);
+}
+
+.btn-large {
+  font-size: 1.1rem;
+  padding: 1rem;
+  margin-top: 1rem;
+}
