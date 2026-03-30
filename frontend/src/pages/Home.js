@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-import { Calendar, Clock, MapPin, Phone, Mail, Star, Ticket, ChevronRight } from 'lucide-react';
+import { Calendar, Clock, MapPin, Phone, Mail, Ticket } from 'lucide-react';
 import './Home.css';
 
 const Home = () => {
-  const { events, setSelectedEventById } = useAppContext();
-  const navigate = useNavigate();
+  const { events } = useAppContext();
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [messageForm, setMessageForm] = useState({ name: '', email: '', message: '' });
   const [messageSuccess, setMessageSuccess] = useState(false);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Ticket, User, Home, Settings } from 'lucide-react';
+import { Ticket, Home } from 'lucide-react';
 import './Layout.css';
 
 const Layout = ({ children }) => {
