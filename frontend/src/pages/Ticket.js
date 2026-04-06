@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { useLocation, Navigate, Link } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams, useLocation, Navigate, Link } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import { CheckCircle, Download, Home } from 'lucide-react';
 import html2canvas from 'html2canvas';
@@ -7,14 +7,37 @@ import jsPDF from 'jspdf';
 import './Ticket.css';
 
 const Ticket = () => {
+  const { bookingId } = useParams();
   const location = useLocation();
   const { eventDetails } = useAppContext();
-  const booking = location.state?.booking;
+  const [booking, setBooking] = useState(null);
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
   const ticketRef = useRef(null);
 
-  if (!booking) {
-    return <Navigate to="/" replace />;
-  }
+  useEffect(() => {
+    const loadBooking = () => {
+      // 1. Try to get from navigation state
+      if (location.state?.booking) {
+        setBooking(location.state.booking);
+        setEvent(location.state.event || eventDetails);
+        setLoading(false);
+        return;
+      }
+
+      // 2. Fallback to localStorage for refresh persistence
+      const savedBooking = localStorage.getItem(`booking_${bookingId}`);
+      if (savedBooking) {
+        const parsed = JSON.parse(savedBooking);
+        setBooking(parsed.booking);
+        setEvent(parsed.event);
+      }
+      
+      setLoading(false);
+    };
+
+    loadBooking();
+  }, [bookingId, location.state, eventDetails]);
 
   const downloadPDF = async () => {
     const element = ticketRef.current;
@@ -29,12 +52,15 @@ const Ticket = () => {
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
       
       pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`DramaTicket_${booking.id}.pdf`);
+      pdf.save(`DramaTicket_${bookingId}.pdf`);
     } catch (err) {
       console.error("Failed to generate PDF", err);
       alert("Failed to generate PDF. Please try again.");
     }
   };
+
+  if (loading) return <div className="container">Loading...</div>;
+  if (!booking) return <Navigate to="/" replace />;
 
   return (
     <div className="ticket-page container">
@@ -56,7 +82,7 @@ const Ticket = () => {
       <div className="ticket-wrapper">
         <div className="ticket-card" ref={ticketRef}>
           <div className="ticket-header">
-            <h2>{eventDetails.title}</h2>
+            <h2>{event?.title}</h2>
             <span className="ticket-badge">E-TICKET</span>
           </div>
           
@@ -64,19 +90,19 @@ const Ticket = () => {
             <div className="ticket-grid">
               <div className="ticket-info">
                 <p className="label">Booking ID</p>
-                <p className="value">{booking.id}</p>
+                <p className="value">{booking.bookingId}</p>
               </div>
               <div className="ticket-info">
                 <p className="label">Date & Time</p>
-                <p className="value">{new Date(eventDetails.date).toLocaleDateString()} | {eventDetails.time}</p>
+                <p className="value">{event ? new Date(event.date).toLocaleDateString() : ''} | {event?.time}</p>
               </div>
               <div className="ticket-info">
                 <p className="label">Venue</p>
-                <p className="value">{eventDetails.venue}</p>
+                <p className="value">{event?.venue}</p>
               </div>
               <div className="ticket-info">
                 <p className="label">Seats ({booking.ticketsCount})</p>
-                <p className="value highlights">{booking.seats.join(', ')}</p>
+                <p className="value highlights">{booking.seats ? booking.seats.join(', ') : ''}</p>
               </div>
               <div className="ticket-info">
                 <p className="label">Amount Paid</p>

@@ -18,9 +18,14 @@ const INITIAL_EVENTS = [
 ];
 
 export const AppProvider = ({ children }) => {
+  // --- CONFIGURATION ---
+  const GOOGLE_SCRIPT_URL = process.env.REACT_APP_GOOGLE_SCRIPT_URL || 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec';
+  const RAZORPAY_KEY_ID = process.env.REACT_APP_RAZORPAY_KEY_ID || "rzp_live_SZKkVRt0veocZZ";
+
   const [events] = useState(INITIAL_EVENTS);
   const [eventDetails, setEventDetails] = useState(INITIAL_EVENTS[0]);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const setSelectedEventById = (id) => {
     const event = events.find(e => e.id === id);
@@ -40,9 +45,33 @@ export const AppProvider = ({ children }) => {
   };
 
   const addBooking = async (bookingData) => {
-    console.log("Mock booking created:", bookingData);
-    // Simulating a successful booking for frontend-only
-    return { success: true };
+    setIsProcessing(true);
+    try {
+      // 1. Generate a unique booking ID if not present
+      const bookingId = bookingData.bookingId || `BK-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+      const finalBooking = { ...bookingData, bookingId, status: 'Confirmed' };
+
+      // 2. Save to Google Sheets
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify(finalBooking)
+      });
+
+      // 3. Save to localStorage for Ticket page persistence (since we can't fetch back from Sheets easily)
+      const ticketData = {
+        booking: finalBooking,
+        event: events[0] // Fallback to current event
+      };
+      localStorage.setItem(`booking_${bookingId}`, JSON.stringify(ticketData));
+
+      return { success: true, booking: finalBooking };
+    } catch (error) {
+      console.error("Booking error:", error);
+      throw error;
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -54,7 +83,9 @@ export const AppProvider = ({ children }) => {
       setSelectedEventById,
       addBooking,
       getBookedSeats,
-      isLoading: false
+      isLoading: false,
+      isProcessing,
+      RAZORPAY_KEY_ID
     }}>
       {children}
     </AppContext.Provider>

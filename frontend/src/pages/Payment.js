@@ -42,7 +42,12 @@ const Payment = () => {
       try {
         const result = await addBooking(finalBooking);
         // Navigate to ticket page with the booking data
-        navigate('/ticket', { state: { booking: result.booking } });
+        navigate(`/ticket/${result.booking.bookingId}`, { 
+          state: { 
+            booking: result.booking,
+            event: eventDetails 
+          } 
+        });
       } catch (err) {
         alert("Booking failed due to an API error or seat unavailability. Please try again.");
         setIsProcessing(false);
