@@ -18,7 +18,6 @@ const Layout = ({ children }) => {
             </Link>
             <nav className="nav-links">
               <Link to="/" className="nav-link"><Home size={18} /> <span className="link-text">Home</span></Link>
-              <Link to="/" className="nav-link btn-primary"><Ticket size={18} /> <span className="link-text">Book Now</span></Link>
             </nav>
           </div>
         </header>
