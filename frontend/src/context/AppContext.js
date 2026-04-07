@@ -9,7 +9,7 @@ const INITIAL_EVENTS = [
     date: "2026-04-15",
     time: "6:00 PM",
     venue: "Lokmanya Rang Mandir, Belgaum",
-    description: "मराठी रंगभूमीवरील एक उत्कृष्ट कलाकृती! 'वैजयंता' या नाटकाचे सादरीकरण अनुभवा.",
+    description: "दोन उत्कृष्ट नाटकांचा संगम! 'वैजयंता' आणि 'नंगी आवाजें' या दोन्ही नाटकांचे सादरीकरण अनुभवा.",
     ticketPrice: "250",
     upiId: "theatre-admin@upi",
     total_capacity: 100,
