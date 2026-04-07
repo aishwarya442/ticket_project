@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 const AppContext = createContext();
 
@@ -31,122 +31,27 @@ const INITIAL_EVENTS = [
 
 export const AppProvider = ({ children }) => {
   // --- CONFIGURATION ---
-  const GOOGLE_SCRIPT_URL = process.env.REACT_APP_GOOGLE_SCRIPT_URL || 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec';
   const RAZORPAY_KEY_ID = process.env.REACT_APP_RAZORPAY_KEY_ID || "rzp_live_SZKkVRt0veocZZ";
+  const WHATSAPP_NUMBER = "917483173365"; 
 
-  const [loading, setLoading] = useState(true);
-  const [events, setEvents] = useState(INITIAL_EVENTS);
-  const [eventDetails, setEventDetails] = useState(INITIAL_EVENTS[0]);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [loading] = useState(false);
+  const [events] = useState(INITIAL_EVENTS);
+  const [eventDetails] = useState(INITIAL_EVENTS[0]);
   const [isProcessing, setIsProcessing] = useState(false);
-  
-  // Theme Management
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-  });
-
-  useEffect(() => {
-    document.body.className = theme === 'light' ? 'light-theme' : '';
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  };
-
-  // 1. Fetch Event Details from Google Sheets
-  const fetchEventData = useCallback(async () => {
-    if (GOOGLE_SCRIPT_URL.includes('YOUR_SCRIPT_ID_HERE')) {
-      console.warn("Google Script URL not configured. Using initial data.");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const response = await fetch(GOOGLE_SCRIPT_URL);
-      const data = await response.json();
-      
-      if (Array.isArray(data) && data.length > 0) {
-        setEvents(data);
-        setEventDetails(data[0]);
-        // Also update selectedEvent if it matches
-        if (selectedEvent) {
-          const updatedSelected = data.find(e => e.id === selectedEvent.id);
-          if (updatedSelected) setSelectedEvent(updatedSelected);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching event data:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [GOOGLE_SCRIPT_URL, selectedEvent]);
-
-  useEffect(() => {
-    fetchEventData();
-  }, [fetchEventData]); // Run once on mount
-
-  const setSelectedEventById = (id) => {
-    const event = events.find(e => e.id === id);
-    if (event) {
-      setSelectedEvent(event);
-    }
-  };
-
-  const updateEventDetails = async (newDetails) => {
-    setIsProcessing(true);
-    try {
-      // Send update to Google Apps Script
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: JSON.stringify({
-          ...newDetails,
-          action: 'updateEvent'
-        })
-      });
-
-      // Update local state immediately for UI responsiveness
-      setEventDetails(newDetails);
-      setEvents(prev => prev.map(e => e.id === newDetails.id ? newDetails : e));
-      
-      return newDetails;
-    } catch (error) {
-      console.error("Update error:", error);
-      throw error;
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  const getBookedSeats = () => {
-    return selectedEvent?.booked_seats || [];
-  };
 
   const addBooking = async (bookingData) => {
     setIsProcessing(true);
     try {
-      // 1. Generate a unique booking ID if not present
+      // 1. Generate a unique booking ID
       const bookingId = bookingData.bookingId || `BK-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
       const finalBooking = { ...bookingData, bookingId, status: 'Confirmed' };
 
-      // 2. Save to Google Sheets
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: JSON.stringify(finalBooking)
-      });
-
-      // 3. Save to localStorage for Ticket page persistence
+      // 2. Save only to localStorage (since we removed the backend)
       const ticketData = {
         booking: finalBooking,
         event: bookingData.event || eventDetails
       };
       localStorage.setItem(`booking_${bookingId}`, JSON.stringify(ticketData));
-
-      // 4. Refresh data to get newly booked seats
-      setTimeout(fetchEventData, 1000); 
 
       return { success: true, booking: finalBooking };
     } catch (error) {
@@ -159,7 +64,7 @@ export const AppProvider = ({ children }) => {
 
   const handlePayment = async (event, ticketsCount, userData, navigate) => {
     setIsProcessing(true);
-    // Parse price - handle range if present (e.g. "250 - 300" -> 300)
+    // Parse price
     const priceStr = String(event.ticketPrice);
     const price = priceStr.includes('-') 
       ? parseInt(priceStr.split('-')[1].trim()) 
@@ -184,14 +89,14 @@ export const AppProvider = ({ children }) => {
 
     const res = await loadScript();
     if (!res) {
-      alert("Razorpay SDK failed to load. Please check your internet connection.");
+      alert("Razorpay SDK failed to load.");
       setIsProcessing(false);
       return;
     }
 
     const options = {
       key: RAZORPAY_KEY_ID,
-      amount: amount * 100, // in paise
+      amount: amount * 100,
       currency: "INR",
       name: "RANGABHOOMI",
       description: `Tickets for ${event.title}`,
@@ -204,9 +109,9 @@ export const AppProvider = ({ children }) => {
             amount,
             utr: response.razorpay_payment_id,
             paymentId: response.razorpay_payment_id,
-            event: event, // Pass event for storage
+            event: event,
             eventTitle: event.title,
-            seats: Array.from({length: ticketsCount}, (_, i) => `S-${i+1}`) // Mock seats
+            seats: Array.from({length: ticketsCount}, (_, i) => `S-${i+1}`)
           };
 
           const result = await addBooking(finalBookingData);
@@ -219,8 +124,7 @@ export const AppProvider = ({ children }) => {
             });
           }
         } catch (err) {
-          console.error("Payment handler error:", err);
-          alert("Payment successful but booking failed. Please contact us with Payment ID: " + response.razorpay_payment_id);
+          console.error("Booking error:", err);
           setIsProcessing(false);
         }
       },
@@ -229,14 +133,8 @@ export const AppProvider = ({ children }) => {
         email: userData.email,
         contact: userData.phone,
       },
-      theme: {
-        color: "#e50914",
-      },
-      modal: {
-        ondismiss: function() {
-          setIsProcessing(false);
-        }
-      }
+      theme: { color: "#e50914" },
+      modal: { ondismiss: () => setIsProcessing(false) }
     };
 
     const paymentObject = new window.Razorpay(options);
@@ -247,18 +145,12 @@ export const AppProvider = ({ children }) => {
     <AppContext.Provider value={{
       events,
       eventDetails,
-      updateEventDetails,
-      selectedEvent,
-      setSelectedEventById,
       addBooking,
       handlePayment,
-      getBookedSeats,
       isLoading: loading,
       isProcessing,
       RAZORPAY_KEY_ID,
-      theme,
-      toggleTheme,
-      refreshData: fetchEventData
+      WHATSAPP_NUMBER
     }}>
       {children}
     </AppContext.Provider>

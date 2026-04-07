@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import { Calendar, Clock, MapPin, Phone, Mail, Ticket } from 'lucide-react';
@@ -7,38 +7,9 @@ import './Home.css';
 const Home = () => {
   const { events } = useAppContext();
   const navigate = useNavigate();
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [messageForm, setMessageForm] = useState({ name: '', email: '', message: '' });
-  const [messageSuccess, setMessageSuccess] = useState(false);
 
   // Identify the closest upcoming show for the Hero
   const featuredEvent = events && events.length > 0 ? events[0] : null;
-
-  useEffect(() => {
-    const calculateTimeLeft = () => {
-      if (!featuredEvent) return;
-      
-      let hour = parseInt(featuredEvent.time);
-      if (featuredEvent.time.includes('PM') && hour !== 12) hour += 12;
-      const targetDate = new Date(`${featuredEvent.date}T${String(hour).padStart(2,'0')}:00:00`);
-      
-      const now = new Date();
-      const difference = targetDate.getTime() - now.getTime();
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60)
-        });
-      }
-    };
-
-    const timer = setInterval(calculateTimeLeft, 1000);
-    calculateTimeLeft();
-    return () => clearInterval(timer);
-  }, [featuredEvent]);
 
   const handleBookNow = (eventId) => {
     navigate(`/book/${eventId}`);
@@ -82,32 +53,6 @@ const Home = () => {
         </section>
       )}
 
-      {featuredEvent && (
-        <section className="countdown-section">
-          <div className="container">
-            <h2>Show Starts In</h2>
-            <div className="countdown-timer">
-              <div className="time-box">
-                <div className="time-value">{String(timeLeft.days).padStart(2, '0')}</div>
-                <div className="time-label">DAYS</div>
-              </div>
-              <div className="time-box">
-                <div className="time-value">{String(timeLeft.hours).padStart(2, '0')}</div>
-                <div className="time-label">HOURS</div>
-              </div>
-              <div className="time-box">
-                <div className="time-value">{String(timeLeft.minutes).padStart(2, '0')}</div>
-                <div className="time-label">MINUTES</div>
-              </div>
-              <div className="time-box">
-                <div className="time-value">{String(timeLeft.seconds).padStart(2, '0')}</div>
-                <div className="time-label">SECONDS</div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
       <section id="now-showing" className="events-list-section">
         <div className="container">
           <h2 className="section-title">Vaijayanta / Nangi Awaazien</h2>
@@ -133,10 +78,10 @@ const Home = () => {
       </section>
 
       <section className="contact-section">
-        <div className="container contact-content">
-          <div className="contact-info">
-            <h2>Get in Touch</h2>
-            <div className="contact-items">
+        <div className="container">
+          <div className="contact-info" style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
+            <h2 style={{ marginBottom: '2rem' }}>Get in Touch</h2>
+            <div className="contact-items" style={{ justifyContent: 'center' }}>
               <div className="contact-item">
                 <Phone size={24} className="contact-icon" />
                 <div><h4>Phone</h4><p>+91 74831 73365</p></div>
@@ -147,21 +92,6 @@ const Home = () => {
               </div>
             </div>
           </div>
-          
-          <form className="contact-form">
-            <h3>Send us a Message</h3>
-            {messageSuccess && <div className="success-banner">✓ Message sent successfully.</div>}
-            <div className="form-group">
-              <input type="text" placeholder="Your Name" value={messageForm.name} onChange={(e) => setMessageForm({...messageForm, name: e.target.value})} />
-            </div>
-            <div className="form-group">
-              <input type="email" placeholder="Your Email" value={messageForm.email} onChange={(e) => setMessageForm({...messageForm, email: e.target.value})} />
-            </div>
-            <div className="form-group">
-              <textarea placeholder="Your Message" rows="4" value={messageForm.message} onChange={(e) => setMessageForm({...messageForm, message: e.target.value})}></textarea>
-            </div>
-            <button type="button" onClick={() => {setMessageSuccess(true); setTimeout(()=>setMessageSuccess(false), 3000)}} className="btn btn-primary w-100">Send Message</button>
-          </form>
         </div>
       </section>
     </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useLocation, Navigate, Link } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-import { CheckCircle, Download, Home } from 'lucide-react';
+import { CheckCircle, Download, Home, MessageSquare } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import './Ticket.css';
@@ -9,7 +9,7 @@ import './Ticket.css';
 const Ticket = () => {
   const { bookingId } = useParams();
   const location = useLocation();
-  const { eventDetails } = useAppContext();
+  const { eventDetails, WHATSAPP_NUMBER } = useAppContext();
   const [booking, setBooking] = useState(null);
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -39,6 +39,21 @@ const Ticket = () => {
     loadBooking();
   }, [bookingId, location.state, eventDetails]);
 
+  const handleWhatsAppConfirm = () => {
+    if (!booking || !event) return;
+    
+    const text = `Hello! I have booked tickets for *${event.title}* via DramaTickets.\n\n` +
+                 `*Booking ID:* ${booking.bookingId}\n` +
+                 `*Name:* ${booking.name}\n` +
+                 `*Quantity:* ${booking.ticketsCount}\n` +
+                 `*Amount:* ₹${booking.amount}\n` +
+                 `*Payment ID:* ${booking.paymentId}\n\n` +
+                 `Please confirm my booking. Thank you!`;
+                 
+    const encodedText = encodeURIComponent(text);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedText}`, '_blank');
+  };
+
   const downloadPDF = async () => {
     const element = ticketRef.current;
     if (!element) return;
@@ -67,12 +82,15 @@ const Ticket = () => {
       <div className="success-header">
         <CheckCircle size={64} className="success-icon" />
         <h1 className="section-title" style={{marginBottom: '1rem'}}>Booking Confirmed!</h1>
-        <p>Your tickets have been successfully booked.</p>
+        <p>Your tickets have been successfully booked. Please confirm on WhatsApp.</p>
       </div>
 
       <div className="ticket-actions">
-        <button onClick={downloadPDF} className="btn-primary">
-          <Download size={18} /> Download PDF Ticket
+        <button onClick={handleWhatsAppConfirm} className="btn-primary" style={{backgroundColor: '#25D366', borderColor: '#25D366'}}>
+          <MessageSquare size={18} /> Confirm on WhatsApp
+        </button>
+        <button onClick={downloadPDF} className="btn-outline">
+          <Download size={18} /> Download Ticket
         </button>
         <Link to="/" className="btn-outline">
           <Home size={18} /> Back to Home

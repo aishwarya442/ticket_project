@@ -35,10 +35,10 @@ const BookingForm = () => {
   }
 
   const priceStr = String(event.ticketPrice);
-  const price = priceStr.includes('-') 
-    ? parseInt(priceStr.split('-')[1].trim()) 
+  const price = priceStr.includes('-')
+    ? parseInt(priceStr.split('-')[1].trim())
     : parseInt(priceStr);
-    
+
   const totalPrice = ticketsCount * price;
 
   return (
@@ -57,18 +57,18 @@ const BookingForm = () => {
         <div className="booking-form-container card" style={{ maxWidth: '600px', margin: '4rem auto', padding: '2rem' }}>
           <h3>Book Your Tickets</h3>
           <p className="modal-subtitle">Experience the magic of theatre. Select your tickets below.</p>
-          
+
           <form onSubmit={onProceedToPay}>
             <div className="form-group">
               <label>Number of Tickets</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem' }}>
-                <input 
-                  type="number" 
-                  min="1" 
+                <input
+                  type="number"
+                  min="1"
                   max="10"
-                  value={ticketsCount} 
-                  onChange={(e) => setTicketsCount(parseInt(e.target.value) || 1)} 
-                  required 
+                  value={ticketsCount}
+                  onChange={(e) => setTicketsCount(parseInt(e.target.value) || 1)}
+                  required
                 />
                 <span>Total: <strong className="highlight">₹{totalPrice}</strong></span>
               </div>
@@ -86,14 +86,14 @@ const BookingForm = () => {
               <label>Phone Number</label>
               <input type="tel" name="phone" value={userData.phone} onChange={handleInputChange} placeholder="Enter your mobile number" required />
             </div>
-            
-            <div className="modal-footer" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem', marginTop: '1.5rem' }}>
+
+            <div className="modal-footer" style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem', marginTop: '1.5rem' }}>
               <div className="total-display">
                 <span>To Pay:</span>
                 <span className="price">₹{totalPrice}</span>
               </div>
               <button type="submit" className="btn btn-primary" disabled={isProcessing}>
-                {isProcessing ? "Processing..." : "Pay with Razorpay"} <CreditCard size={18} style={{marginLeft: '10px'}} />
+                {isProcessing ? "Processing..." : "Pay with Razorpay"} <CreditCard size={18} style={{ marginLeft: '10px' }} />
               </button>
             </div>
           </form>
