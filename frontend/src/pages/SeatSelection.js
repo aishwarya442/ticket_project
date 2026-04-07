@@ -87,7 +87,14 @@ const BookingForm = () => {
                   min="1"
                   max="10"
                   value={ticketsCount}
-                  onChange={(e) => setTicketsCount(parseInt(e.target.value) || 1)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '') {
+                      setTicketsCount('');
+                    } else {
+                      setTicketsCount(parseInt(val) || 1);
+                    }
+                  }}
                   required
                 />
                 <span>Total: <strong className="highlight" style={{ fontSize: '1.2rem' }}>₹{totalPrice}</strong></span>
