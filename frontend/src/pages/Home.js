@@ -60,7 +60,7 @@ const Home = () => {
             {events.map((event) => (
               <div key={event.id} className="event-card">
                 <div className="event-card-content">
-                  <div className="event-card-badge">₹{event.ticketPrice}</div>
+                  <div className="event-card-badge">₹249 / ₹299</div>
                   <h3>{event.title}</h3>
                   <div className="event-card-meta">
                     <p><Calendar size={20} /> {new Date(event.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</p>

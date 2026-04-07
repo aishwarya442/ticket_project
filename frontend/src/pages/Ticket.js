@@ -45,6 +45,7 @@ const Ticket = () => {
     const text = `Hello! I have booked tickets for *${event.title}* via DramaTickets.\n\n` +
                  `*Booking ID:* ${booking.bookingId}\n` +
                  `*Name:* ${booking.name}\n` +
+                 `*Category:* ${booking.seatCategory || 'Lower Seat'}\n` +
                  `*Quantity:* ${booking.ticketsCount}\n` +
                  `*Amount:* ₹${booking.amount}\n` +
                  `*Payment ID:* ${booking.paymentId}\n\n` +
@@ -117,6 +118,10 @@ const Ticket = () => {
               <div className="ticket-info">
                 <p className="label">Venue</p>
                 <p className="value">{event?.venue}</p>
+              </div>
+              <div className="ticket-info">
+                <p className="label">Category</p>
+                <p className="value highlight-text" style={{fontWeight: '700', color: '#e50914'}}>{booking.seatCategory || 'Lower Seat'}</p>
               </div>
               <div className="ticket-info">
                 <p className="label">Seats ({booking.ticketsCount})</p>

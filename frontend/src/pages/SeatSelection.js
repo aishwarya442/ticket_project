@@ -9,7 +9,7 @@ const BookingForm = () => {
   const navigate = useNavigate();
   const { events, handlePayment, isProcessing } = useAppContext();
   const [ticketsCount, setTicketsCount] = useState(1);
-  const [userData, setUserData] = useState({ name: '', email: '', phone: '' });
+  const [userData, setUserData] = useState({ name: '', email: '', phone: '', seatCategory: 'Lower Seat' });
 
   const event = events.find(e => String(e.id) === String(eventId));
 
@@ -21,25 +21,21 @@ const BookingForm = () => {
   const onProceedToPay = (e) => {
     e.preventDefault();
     if (!event) return;
-    handlePayment(event, ticketsCount, userData, navigate);
+    const unitPrice = userData.seatCategory === 'Balcony Seat' ? 299 : 249;
+    handlePayment(event, ticketsCount, userData, navigate, unitPrice);
   };
 
   if (!event) {
     return (
       <div className="container" style={{ textAlign: 'center', marginTop: '5rem' }}>
         <h2>Loading your show...</h2>
-        <p style={{ marginBottom: '2rem', opacity: 0.7 }}>Please ensure your Google Script URL is correct.</p>
         <Link to="/" className="btn btn-primary">Return to Home</Link>
       </div>
     );
   }
 
-  const priceStr = String(event.ticketPrice);
-  const price = priceStr.includes('-')
-    ? parseInt(priceStr.split('-')[1].trim())
-    : parseInt(priceStr);
-
-  const totalPrice = ticketsCount * price;
+  const unitPrice = userData.seatCategory === 'Balcony Seat' ? 299 : 249;
+  const totalPrice = ticketsCount * unitPrice;
 
   return (
     <div className="seat-selection-page">
@@ -56,9 +52,33 @@ const BookingForm = () => {
 
         <div className="booking-form-container card" style={{ maxWidth: '600px', margin: '4rem auto', padding: '2rem' }}>
           <h3>Book Your Tickets</h3>
-          <p className="modal-subtitle">Experience the magic of theatre. Select your tickets below.</p>
+          <p className="modal-subtitle">Pick your preferred seat category and quantity.</p>
 
           <form onSubmit={onProceedToPay}>
+            <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+              <label>Select Seat Category</label>
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '0.8rem' }}>
+                <label className={`category-choice ${userData.seatCategory === 'Lower Seat' ? 'active' : ''}`} style={{
+                  flex: 1, padding: '1rem', border: '1px solid var(--border-color)', borderRadius: '8px', cursor: 'pointer',
+                  background: userData.seatCategory === 'Lower Seat' ? 'rgba(229, 9, 20, 0.1)' : 'transparent',
+                  borderColor: userData.seatCategory === 'Lower Seat' ? 'var(--primary-color)' : 'var(--border-color)'
+                }}>
+                  <input type="radio" name="seatCategory" value="Lower Seat" checked={userData.seatCategory === 'Lower Seat'} onChange={handleInputChange} style={{ display: 'none' }} />
+                  <div style={{ fontWeight: '600' }}>Lower Seat</div>
+                  <div style={{ fontSize: '0.85rem', opacity: 0.7 }}>₹249 per ticket</div>
+                </label>
+                <label className={`category-choice ${userData.seatCategory === 'Balcony Seat' ? 'active' : ''}`} style={{
+                  flex: 1, padding: '1rem', border: '1px solid var(--border-color)', borderRadius: '8px', cursor: 'pointer',
+                  background: userData.seatCategory === 'Balcony Seat' ? 'rgba(229, 9, 20, 0.1)' : 'transparent',
+                  borderColor: userData.seatCategory === 'Balcony Seat' ? 'var(--primary-color)' : 'var(--border-color)'
+                }}>
+                  <input type="radio" name="seatCategory" value="Balcony Seat" checked={userData.seatCategory === 'Balcony Seat'} onChange={handleInputChange} style={{ display: 'none' }} />
+                  <div style={{ fontWeight: '600' }}>Balcony Seat</div>
+                  <div style={{ fontSize: '0.85rem', opacity: 0.7 }}>₹299 per ticket</div>
+                </label>
+              </div>
+            </div>
+
             <div className="form-group">
               <label>Number of Tickets</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem' }}>
@@ -70,7 +90,7 @@ const BookingForm = () => {
                   onChange={(e) => setTicketsCount(parseInt(e.target.value) || 1)}
                   required
                 />
-                <span>Total: <strong className="highlight">₹{totalPrice}</strong></span>
+                <span>Total: <strong className="highlight" style={{ fontSize: '1.2rem' }}>₹{totalPrice}</strong></span>
               </div>
             </div>
 

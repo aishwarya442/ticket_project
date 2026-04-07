@@ -10,7 +10,7 @@ const INITIAL_EVENTS = [
     time: "6:00 PM",
     venue: "Lokmanya Rang Mandir, Belgaum",
     description: "दोन उत्कृष्ट नाटकांचा संगम! 'वैजयंता' आणि 'नंगी आवाजें' या दोन्ही नाटकांचे सादरीकरण अनुभवा.",
-    ticketPrice: "250",
+    ticketPrice: "249 / 299",
     upiId: "theatre-admin@upi",
     total_capacity: 100,
     booked_seats: []
@@ -22,7 +22,7 @@ const INITIAL_EVENTS = [
     time: "8:00 PM",
     venue: "Lokmanya Rang Mandir, Belgaum",
     description: "जादुई सादरीकरण! 'नंगी आवाजें' या नाटकाचे सादरीकरण अनुभवा. मराठी रंगभूमीवरील ही एक अविस्मरणीय मेजवानी असेल.",
-    ticketPrice: "300",
+    ticketPrice: "249 / 299",
     upiId: "theatre-admin@upi",
     total_capacity: 100,
     booked_seats: []
@@ -62,13 +62,17 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const handlePayment = async (event, ticketsCount, userData, navigate) => {
+  const handlePayment = async (event, ticketsCount, userData, navigate, customPrice) => {
     setIsProcessing(true);
-    // Parse price
-    const priceStr = String(event.ticketPrice);
-    const price = priceStr.includes('-') 
-      ? parseInt(priceStr.split('-')[1].trim()) 
-      : parseInt(priceStr);
+    
+    // Use customPrice if provided, otherwise parse from event
+    let price = customPrice;
+    if (!price) {
+      const priceStr = String(event.ticketPrice);
+      price = priceStr.includes('/') 
+        ? parseInt(priceStr.split('/')[0].trim()) 
+        : parseInt(priceStr);
+    }
       
     const amount = ticketsCount * price;
 
@@ -111,7 +115,7 @@ export const AppProvider = ({ children }) => {
             paymentId: response.razorpay_payment_id,
             event: event,
             eventTitle: event.title,
-            seats: Array.from({length: ticketsCount}, (_, i) => `S-${i+1}`)
+            seats: Array.from({length: ticketsCount}, (_, i) => `${userData.seatCategory || 'Seat'}-${i+1}`)
           };
 
           const result = await addBooking(finalBookingData);
