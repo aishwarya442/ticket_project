@@ -35,9 +35,13 @@ const Home = () => {
                 <Calendar size={20} className="meta-icon" />
                 <span>{new Date(featuredEvent.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
               </div>
-              <div className="meta-item-new">
+              <div className="meta-item-new highlight-meta">
                 <Clock size={20} className="meta-icon" />
-                <span>{featuredEvent.time}</span>
+                <span>{(() => {
+                  const diff = new Date(featuredEvent.date) - new Date();
+                  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+                  return days > 0 ? `${days} Days to Go` : 'Showing Today!';
+                })()}</span>
               </div>
               <div className="meta-item-new">
                 <MapPin size={20} className="meta-icon" />
