@@ -4,7 +4,6 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import BookingForm from './pages/SeatSelection';
 import Ticket from './pages/Ticket';
-import { useAppContext } from './context/AppContext';
 
 const AppRoutes = () => {
   return (
