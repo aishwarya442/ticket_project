@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AppContext = createContext();
 
@@ -26,6 +26,18 @@ export const AppProvider = ({ children }) => {
   const [events] = useState(INITIAL_EVENTS);
   const [eventDetails] = useState(INITIAL_EVENTS[0]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.body.classList.add('light-theme');
+    } else {
+      document.body.classList.remove('light-theme');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
 
   const addBooking = async (bookingData) => {
     setIsProcessing(true);
@@ -141,6 +153,8 @@ export const AppProvider = ({ children }) => {
       handlePayment,
       isLoading: loading,
       isProcessing,
+      theme,
+      toggleTheme,
       RAZORPAY_KEY_ID,
       WHATSAPP_NUMBER
     }}>

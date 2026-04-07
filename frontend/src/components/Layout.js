@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Home } from 'lucide-react';
+import { Home, Sun, Moon } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
 import './Layout.css';
 
 const Layout = ({ children }) => {
+  const { theme, toggleTheme } = useAppContext();
+
   return (
     <div className="layout-container">
       <header className="navbar">
@@ -14,6 +17,9 @@ const Layout = ({ children }) => {
           </Link>
           <nav className="nav-links">
             <Link to="/" className="nav-link"><Home size={18} /> <span className="link-text">Home</span></Link>
+            <button onClick={toggleTheme} className="theme-toggle-btn" title="Toggle Theme">
+              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
           </nav>
         </div>
       </header>
