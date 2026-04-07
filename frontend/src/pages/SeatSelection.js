@@ -21,7 +21,7 @@ const BookingForm = () => {
   const onProceedToPay = (e) => {
     e.preventDefault();
     if (!event) return;
-    const unitPrice = userData.seatCategory === 'Balcony Seat' ? 299 : 249;
+    const unitPrice = userData.seatCategory === 'Balcony Seat' ? 249 : 299;
     handlePayment(event, ticketsCount, userData, navigate, unitPrice);
   };
 
@@ -34,7 +34,7 @@ const BookingForm = () => {
     );
   }
 
-  const unitPrice = userData.seatCategory === 'Balcony Seat' ? 299 : 249;
+  const unitPrice = userData.seatCategory === 'Balcony Seat' ? 249 : 299;
   const totalPrice = (parseInt(ticketsCount) || 0) * unitPrice;
 
   return (
@@ -65,7 +65,7 @@ const BookingForm = () => {
                 }}>
                   <input type="radio" name="seatCategory" value="Lower Seat" checked={userData.seatCategory === 'Lower Seat'} onChange={handleInputChange} style={{ display: 'none' }} />
                   <div style={{ fontWeight: '600' }}>Lower Seat</div>
-                  <div style={{ fontSize: '0.85rem', opacity: 0.7 }}>₹249 per ticket</div>
+                  <div style={{ fontSize: '0.85rem', opacity: 0.7 }}>₹299 per ticket</div>
                 </label>
                 <label className={`category-choice ${userData.seatCategory === 'Balcony Seat' ? 'active' : ''}`} style={{
                   flex: 1, padding: '1rem', border: '1px solid var(--border-color)', borderRadius: '8px', cursor: 'pointer',
@@ -74,7 +74,7 @@ const BookingForm = () => {
                 }}>
                   <input type="radio" name="seatCategory" value="Balcony Seat" checked={userData.seatCategory === 'Balcony Seat'} onChange={handleInputChange} style={{ display: 'none' }} />
                   <div style={{ fontWeight: '600' }}>Balcony Seat</div>
-                  <div style={{ fontSize: '0.85rem', opacity: 0.7 }}>₹299 per ticket</div>
+                  <div style={{ fontSize: '0.85rem', opacity: 0.7 }}>₹249 per ticket</div>
                 </label>
               </div>
             </div>

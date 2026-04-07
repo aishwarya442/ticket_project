@@ -82,20 +82,23 @@ const Ticket = () => {
     <div className="ticket-page container">
       <div className="success-header">
         <CheckCircle size={64} className="success-icon" />
-        <h1 className="section-title" style={{marginBottom: '1rem'}}>Booking Confirmed!</h1>
-        <p>Your tickets have been successfully booked. Please confirm on WhatsApp.</p>
+        <h1 className="section-title" style={{marginBottom: '0.5rem'}}>Booking Confirmed!</h1>
+        <p style={{fontSize: '1.1rem', opacity: 0.9}}>Your e-ticket is ready. Please click the button below to <b>Confirm on WhatsApp</b>.</p>
+        <div style={{marginTop: '0.5rem', fontSize: '0.9rem', color: 'var(--accent-color)'}}>This is required for entry verification.</div>
       </div>
 
-      <div className="ticket-actions">
-        <button onClick={handleWhatsAppConfirm} className="btn-primary" style={{backgroundColor: '#25D366', borderColor: '#25D366'}}>
-          <MessageSquare size={18} /> Confirm on WhatsApp
+      <div className="ticket-actions main-actions">
+        <button onClick={handleWhatsAppConfirm} className="btn-whatsapp pulse">
+          <MessageSquare size={22} /> Confirm on WhatsApp
         </button>
-        <button onClick={downloadPDF} className="btn-outline">
-          <Download size={18} /> Download Ticket
-        </button>
-        <Link to="/" className="btn-outline">
-          <Home size={18} /> Back to Home
-        </Link>
+        <div className="secondary-actions">
+          <button onClick={downloadPDF} className="btn-outline sm">
+            <Download size={16} /> Download PDF
+          </button>
+          <Link to="/" className="btn-outline sm">
+            <Home size={16} /> Home
+          </Link>
+        </div>
       </div>
 
       <div className="ticket-wrapper">

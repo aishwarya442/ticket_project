@@ -10,7 +10,7 @@ const INITIAL_EVENTS = [
     time: "6:00 PM onwards",
     venue: "Lokmanya Rang Mandir, Belgaum",
     description: "दोन उत्कृष्ट नाटकांचा संगम! 'वैजयंता' आणि 'नंगी आवाजें' या दोन्ही नाटकांचे सादरीकरण अनुभवा. मराठी रंगभूमीवरील ही एक अविस्मरणीय मेजवानी असेल.",
-    ticketPrice: "249 / 299",
+    ticketPrice: "299 / 249",
     upiId: "theatre-admin@upi",
     total_capacity: 200,
     booked_seats: []
@@ -46,7 +46,23 @@ export const AppProvider = ({ children }) => {
       const bookingId = bookingData.bookingId || `BK-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
       const finalBooking = { ...bookingData, bookingId, status: 'Confirmed' };
 
-      // 2. Save only to localStorage (since we removed the backend)
+      // 2. Save to Google Sheets (Optional Backend)
+      const GOOGLE_SCRIPT_URL = process.env.REACT_APP_GOOGLE_SCRIPT_URL;
+      if (GOOGLE_SCRIPT_URL) {
+        try {
+          await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(finalBooking)
+          });
+          console.log("Booking saved to Google Sheets");
+        } catch (err) {
+          console.error("Failed to save to Google Sheets:", err);
+        }
+      }
+
+      // 3. Save to localStorage (Fallback/Local Sync)
       const ticketData = {
         booking: finalBooking,
         event: bookingData.event || eventDetails
