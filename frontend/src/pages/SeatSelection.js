@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
-import { ChevronLeft, Ticket, CreditCard } from 'lucide-react';
+import { ChevronLeft, CreditCard } from 'lucide-react';
 import './SeatSelection.css'; // Keep original styling file but focus on form
 
 const BookingForm = () => {

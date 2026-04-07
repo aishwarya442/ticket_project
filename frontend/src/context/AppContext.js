@@ -59,7 +59,7 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     fetchEventData();
-  }, []); // Run once on mount
+  }, [fetchEventData]); // Run once on mount
 
   const setSelectedEventById = (id) => {
     const event = events.find(e => e.id === id);
