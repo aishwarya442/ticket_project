@@ -35,7 +35,7 @@ const BookingForm = () => {
   }
 
   const unitPrice = userData.seatCategory === 'Balcony Seat' ? 299 : 249;
-  const totalPrice = ticketsCount * unitPrice;
+  const totalPrice = (parseInt(ticketsCount) || 0) * unitPrice;
 
   return (
     <div className="seat-selection-page">
@@ -119,7 +119,7 @@ const BookingForm = () => {
                 <span>To Pay:</span>
                 <span className="price">₹{totalPrice}</span>
               </div>
-              <button type="submit" className="btn btn-primary" disabled={isProcessing}>
+              <button type="submit" className="btn btn-primary" disabled={isProcessing || !ticketsCount || ticketsCount < 1}>
                 {isProcessing ? "Processing..." : "Pay with Razorpay"} <CreditCard size={18} style={{ marginLeft: '10px' }} />
               </button>
             </div>
