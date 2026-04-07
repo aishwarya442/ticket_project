@@ -110,7 +110,7 @@ const Home = () => {
 
       <section id="now-showing" className="events-list-section">
         <div className="container">
-          <h2 className="section-title">Upcoming Productions</h2>
+          <h2 className="section-title">Vaijayanta / Nangi Awaazien</h2>
           <div className="events-grid">
             {events.map((event) => (
               <div key={event.id} className="event-card">
