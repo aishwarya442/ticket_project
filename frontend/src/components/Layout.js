@@ -22,11 +22,14 @@ const Layout = ({ children }) => {
         {children}
       </main>
 
-      <footer className="footer">
-        <div className="container">
-          <p>&copy; {new Date().getFullYear()} DramaTickets. Experience the magic of theatre.</p>
-        </div>
-      </footer>
+        <footer className="footer">
+          <div className="container">
+            <p>&copy; {new Date().getFullYear()} DramaTickets. Experience the magic of theatre.</p>
+            <p style={{ marginTop: '0.5rem', opacity: 0.8, fontSize: '0.9rem' }}>
+              For Support: Rushikesh powar 9008208646
+            </p>
+          </div>
+        </footer>
     </div>
   );
 };
