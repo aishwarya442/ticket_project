@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import { Calendar, Clock, MapPin, Phone, Mail, Ticket } from 'lucide-react';
@@ -7,9 +7,33 @@ import './Home.css';
 const Home = () => {
   const { events } = useAppContext();
   const navigate = useNavigate();
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
-  // Identify the closest upcoming show for the Hero
   const featuredEvent = events && events.length > 0 ? events[0] : null;
+
+  useEffect(() => {
+    if (!featuredEvent) return;
+
+    const targetDate = new Date(`${featuredEvent.date}T18:00:00`);
+
+    const timer = setInterval(() => {
+      const now = new Date();
+      const difference = targetDate - now;
+
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60)
+        });
+      } else {
+        clearInterval(timer);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [featuredEvent]);
 
   const handleBookNow = (eventId) => {
     navigate(`/book/${eventId}`);
@@ -30,18 +54,37 @@ const Home = () => {
             <div className="hero-badge">🎭 UPCOMING EVENT</div>
             <h1 className="hero-brand-title">RANGABHOOMI</h1>
             <p className="hero-desc">{featuredEvent.description}</p>
+            
+            <div className="countdown-timer-new">
+              <div className="countdown-unit">
+                <span className="count-num">{String(timeLeft.days).padStart(2, '0')}</span>
+                <span className="count-label">Days</span>
+              </div>
+              <span className="count-sep">:</span>
+              <div className="countdown-unit">
+                <span className="count-num">{String(timeLeft.hours).padStart(2, '0')}</span>
+                <span className="count-label">Hrs</span>
+              </div>
+              <span className="count-sep">:</span>
+              <div className="countdown-unit">
+                <span className="count-num">{String(timeLeft.minutes).padStart(2, '0')}</span>
+                <span className="count-label">Min</span>
+              </div>
+              <span className="count-sep">:</span>
+              <div className="countdown-unit">
+                <span className="count-num">{String(timeLeft.seconds).padStart(2, '0')}</span>
+                <span className="count-label">Sec</span>
+              </div>
+            </div>
+
             <div className="hero-meta-new">
               <div className="meta-item-new">
                 <Calendar size={20} className="meta-icon" />
                 <span>{new Date(featuredEvent.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
               </div>
-              <div className="meta-item-new highlight-meta">
+              <div className="meta-item-new">
                 <Clock size={20} className="meta-icon" />
-                <span>{(() => {
-                  const diff = new Date(featuredEvent.date) - new Date();
-                  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-                  return days > 0 ? `${days} Days to Go` : 'Showing Today!';
-                })()}</span>
+                <span>{featuredEvent.time}</span>
               </div>
               <div className="meta-item-new">
                 <MapPin size={20} className="meta-icon" />

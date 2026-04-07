@@ -896,3 +896,63 @@
     padding: 0 1rem;
   }
 }
+
+/* Countdown Timer Styles */
+.countdown-timer-new {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.count-num {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #e50914;
+  text-shadow: 0 0 20px rgba(229, 9, 20, 0.3);
+  line-height: 1;
+  font-family: 'Inter', sans-serif;
+}
+
+.count-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 0.5rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+}
+
+.count-sep {
+  font-size: 2rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.2);
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .countdown-timer-new {
+    gap: 0.8rem;
+    padding: 1rem;
+  }
+  .count-num {
+    font-size: 2rem;
+  }
+  .countdown-unit {
+    min-width: 60px;
+  }
+}
+
