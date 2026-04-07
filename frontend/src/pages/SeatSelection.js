@@ -87,7 +87,7 @@ const BookingForm = () => {
               <input type="tel" name="phone" value={userData.phone} onChange={handleInputChange} placeholder="Enter your mobile number" required />
             </div>
             
-            <div className="modal-footer" style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.5rem', marginTop: '1.5rem' }}>
+            <div className="modal-footer" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem', marginTop: '1.5rem' }}>
               <div className="total-display">
                 <span>To Pay:</span>
                 <span className="price">₹{totalPrice}</span>

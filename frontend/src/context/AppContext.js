@@ -39,6 +39,20 @@ export const AppProvider = ({ children }) => {
   const [eventDetails, setEventDetails] = useState(INITIAL_EVENTS[0]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  
+  // Theme Management
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  });
+
+  useEffect(() => {
+    document.body.className = theme === 'light' ? 'light-theme' : '';
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   // 1. Fetch Event Details from Google Sheets
   const fetchEventData = useCallback(async () => {
@@ -242,6 +256,8 @@ export const AppProvider = ({ children }) => {
       isLoading: loading,
       isProcessing,
       RAZORPAY_KEY_ID,
+      theme,
+      toggleTheme,
       refreshData: fetchEventData
     }}>
       {children}

@@ -34,7 +34,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-color);
   border-radius: 8px;
   border-left: 3px solid var(--primary-color);
 }
@@ -71,7 +71,7 @@
 .form-group input,
 .form-group textarea {
   padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--surface-color);
   border: 1px solid var(--border-color);
   border-radius: 6px;
   color: var(--text-primary);
@@ -83,7 +83,7 @@
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--surface-color);
   border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.1);
 }
@@ -109,7 +109,7 @@
 .btn-primary {
   padding: 0.75rem 1.5rem;
   background: var(--primary-color);
-  color: white;
+  color: #ffffff;
   border: none;
   border-radius: 6px;
   font-weight: 600;
@@ -131,7 +131,7 @@
 
 .btn-secondary {
   padding: 0.75rem 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--surface-color);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
   border-radius: 6px;
@@ -142,7 +142,7 @@
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--border-color);
   border-color: var(--text-secondary);
 }
 
@@ -231,7 +231,7 @@
 }
 
 .nav-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--surface-color);
   color: var(--text-primary);
 }
 
@@ -318,13 +318,13 @@
 }
 
 .bookings-table th {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-color);
   color: var(--text-secondary);
   font-weight: 600;
 }
 
 .bookings-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-color);
 }
 
 .status-badge {

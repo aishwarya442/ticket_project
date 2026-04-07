@@ -46,15 +46,16 @@
 .screen {
   width: 70%;
   height: 40px;
-  background: linear-gradient(to bottom, rgba(229, 9, 20, 0.4), transparent);
+  background: linear-gradient(to bottom, var(--primary-color), transparent);
+  opacity: 0.4;
   border-top: 3px solid var(--primary-color);
   text-align: center;
   line-height: 40px;
   font-weight: 800;
   letter-spacing: 12px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-primary);
   transform: rotateX(-45deg);
-  box-shadow: 0 20px 40px rgba(229, 9, 20, 0.2);
+  box-shadow: 0 20px 40px var(--shadow-color);
 }
 
 .section-divider {
@@ -65,7 +66,7 @@
   margin: 3rem 0 1.5rem;
   text-transform: uppercase;
   font-weight: 800;
-  border-bottom: 2px solid rgba(229, 9, 20, 0.3);
+  border-bottom: 2px solid var(--primary-color);
   display: inline-block;
   padding-bottom: 0.5rem;
 }
@@ -82,7 +83,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--surface-color);
   padding: 2rem;
   border-radius: 12px;
   border: 1px solid var(--border-color);
@@ -125,8 +126,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -134,7 +135,7 @@
 }
 
 .seat svg {
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .seat-num {
@@ -155,7 +156,7 @@
 .seat.selected {
   background: var(--primary-color);
   border-color: var(--primary-color);
-  box-shadow: 0 0 15px rgba(229, 9, 20, 0.5);
+  box-shadow: 0 0 15px var(--primary-color);
 }
 
 .seat.selected svg {
@@ -163,23 +164,23 @@
 }
 
 .seat.booked {
-  background: #333;
+  background: var(--border-color);
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.3;
 }
 
 .seat.booked svg {
-  color: #1a1a1a;
+  color: var(--text-secondary);
 }
 
 .seat.locked {
-  background: #d4af37;
+  background: var(--accent-color);
   cursor: not-allowed;
   opacity: 0.6;
 }
 
 .seat.locked svg {
-  color: #1a1a1a;
+  color: var(--bg-color);
 }
 
 .legend {
@@ -211,7 +212,7 @@
   padding: 2.5rem;
   border-radius: 12px;
   border: 1px solid var(--border-color);
-  box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
+  box-shadow: 0 -10px 40px var(--shadow-color);
 }
 
 .selection-summary {
@@ -247,7 +248,8 @@
 .proceed-btn.disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background: #666;
+  background: var(--border-color);
+  color: var(--text-secondary);
 }
 
 @media (max-width: 768px) {
