@@ -18,7 +18,7 @@ const Layout = ({ children }) => {
             </Link>
             <nav className="nav-links">
               <Link to="/" className="nav-link"><Home size={18} /> <span className="link-text">Home</span></Link>
-              <a href="https://docs.google.com/forms/d/e/1FAIpQLSc5EzztnhtIOVIrfc_gP5B4TinfRu2okj3asH1bfcZiJ6r-dA/viewform?usp=header" className="nav-link btn-primary"><Ticket size={18} /> <span className="link-text">Book Now</span></a>
+              <Link to="/" className="nav-link btn-primary"><Ticket size={18} /> <span className="link-text">Book Now</span></Link>
             </nav>
           </div>
         </header>

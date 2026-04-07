@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import { Calendar, Clock, MapPin, Phone, Mail, Ticket } from 'lucide-react';
 import './Home.css';
 
 const Home = () => {
   const { events } = useAppContext();
+  const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [messageForm, setMessageForm] = useState({ name: '', email: '', message: '' });
   const [messageSuccess, setMessageSuccess] = useState(false);
@@ -39,7 +41,7 @@ const Home = () => {
   }, [featuredEvent]);
 
   const handleBookNow = (eventId) => {
-    window.location.href = 'https://docs.google.com/forms/d/e/1FAIpQLSc5EzztnhtIOVIrfc_gP5B4TinfRu2okj3asH1bfcZiJ6r-dA/viewform?usp=header';
+    navigate(`/book/${eventId}`);
   };
 
   const scrollToShows = () => {

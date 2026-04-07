@@ -21,7 +21,7 @@ const BookingForm = () => {
   const onProceedToPay = (e) => {
     e.preventDefault();
     if (!event) return;
-    handlePayment(event, ticketsCount, userData);
+    handlePayment(event, ticketsCount, userData, navigate);
   };
 
   if (!event) {
@@ -34,7 +34,12 @@ const BookingForm = () => {
     );
   }
 
-  const totalPrice = ticketsCount * event.ticketPrice;
+  const priceStr = String(event.ticketPrice);
+  const price = priceStr.includes('-') 
+    ? parseInt(priceStr.split('-')[1].trim()) 
+    : parseInt(priceStr);
+    
+  const totalPrice = ticketsCount * price;
 
   return (
     <div className="seat-selection-page">

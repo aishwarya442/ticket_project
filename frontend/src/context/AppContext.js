@@ -115,7 +115,7 @@ export const AppProvider = ({ children }) => {
       // 3. Save to localStorage for Ticket page persistence
       const ticketData = {
         booking: finalBooking,
-        event: eventDetails
+        event: bookingData.event || eventDetails
       };
       localStorage.setItem(`booking_${bookingId}`, JSON.stringify(ticketData));
 
@@ -131,6 +131,91 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const handlePayment = async (event, ticketsCount, userData, navigate) => {
+    setIsProcessing(true);
+    // Parse price - handle range if present (e.g. "250 - 300" -> 300)
+    const priceStr = String(event.ticketPrice);
+    const price = priceStr.includes('-') 
+      ? parseInt(priceStr.split('-')[1].trim()) 
+      : parseInt(priceStr);
+      
+    const amount = ticketsCount * price;
+
+    // Load Razorpay script
+    const loadScript = () => {
+      return new Promise((resolve) => {
+        if (window.Razorpay) {
+          resolve(true);
+          return;
+        }
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.onload = () => resolve(true);
+        script.onerror = () => resolve(false);
+        document.body.appendChild(script);
+      });
+    };
+
+    const res = await loadScript();
+    if (!res) {
+      alert("Razorpay SDK failed to load. Please check your internet connection.");
+      setIsProcessing(false);
+      return;
+    }
+
+    const options = {
+      key: RAZORPAY_KEY_ID,
+      amount: amount * 100, // in paise
+      currency: "INR",
+      name: "RANGABHOOMI",
+      description: `Tickets for ${event.title}`,
+      handler: async function (response) {
+        try {
+          const finalBookingData = {
+            ...userData,
+            ticketsCount,
+            eventId: event.id,
+            amount,
+            utr: response.razorpay_payment_id,
+            paymentId: response.razorpay_payment_id,
+            event: event, // Pass event for storage
+            seats: Array.from({length: ticketsCount}, (_, i) => `S-${i+1}`) // Mock seats
+          };
+
+          const result = await addBooking(finalBookingData);
+          if (result.success) {
+            navigate(`/ticket/${result.booking.bookingId}`, { 
+              state: { 
+                booking: result.booking,
+                event: event 
+              } 
+            });
+          }
+        } catch (err) {
+          console.error("Payment handler error:", err);
+          alert("Payment successful but booking failed. Please contact us with Payment ID: " + response.razorpay_payment_id);
+          setIsProcessing(false);
+        }
+      },
+      prefill: {
+        name: userData.name,
+        email: userData.email,
+        contact: userData.phone,
+      },
+      theme: {
+        color: "#e50914",
+      },
+      modal: {
+        ondismiss: function() {
+          setIsProcessing(false);
+        }
+      }
+    };
+
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  };
+
   return (
     <AppContext.Provider value={{
       events,
@@ -139,6 +224,7 @@ export const AppProvider = ({ children }) => {
       selectedEvent,
       setSelectedEventById,
       addBooking,
+      handlePayment,
       getBookedSeats,
       isLoading: loading,
       isProcessing,

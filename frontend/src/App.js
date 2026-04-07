@@ -2,6 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import Home from './pages/Home';
+import BookingForm from './pages/SeatSelection';
+import Payment from './pages/Payment';
+import Ticket from './pages/Ticket';
 import { useAppContext } from './context/AppContext';
 
 const AppRoutes = () => {
@@ -30,6 +33,9 @@ const AppRoutes = () => {
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/book/:eventId" element={<BookingForm />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/ticket/:bookingId" element={<Ticket />} />
         </Routes>
       </Layout>
     </Router>
