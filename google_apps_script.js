@@ -218,6 +218,27 @@ function addBooking(bookingData) {
     ];
 
     bookingSheet.appendRow(newRow);
+    
+    // --- SEND CONFIRMATION EMAIL ---
+    try {
+      if (bookingData.email && bookingData.email !== 'N/A') {
+        const subject = `Booking Confirmed: ${bookingData.eventTitle || 'Your Show'}`;
+        const body = `Hello ${bookingData.name},\n\n` +
+          `Your booking for "${bookingData.eventTitle || 'the show'}" is confirmed!\n\n` +
+          `Booking ID: ${bookingData.bookingId}\n` +
+          `Quantity: ${bookingData.ticketsCount} ticket(s)\n` +
+          `Total Amount: ₹${bookingData.amount}\n\n` +
+          `Thank you for choosing RANGABHOOMI. We look forward to seeing you at the theater!\n\n` +
+          `Best regards,\n` +
+          `Team Rangabhoomi`;
+        
+        MailApp.sendEmail(bookingData.email, subject, body);
+        Logger.log('Confirmation email sent to: ' + bookingData.email);
+      }
+    } catch (e) {
+      Logger.log('Failed to send confirmation email: ' + e.toString());
+      // Don't throw error here so the booking still succeeds even if email fails
+    }
 
   } catch (error) {
     throw new Error('Failed to add booking: ' + error.toString());

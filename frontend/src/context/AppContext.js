@@ -191,6 +191,7 @@ export const AppProvider = ({ children }) => {
             utr: response.razorpay_payment_id,
             paymentId: response.razorpay_payment_id,
             event: event, // Pass event for storage
+            eventTitle: event.title,
             seats: Array.from({length: ticketsCount}, (_, i) => `S-${i+1}`) // Mock seats
           };
 
