@@ -86,9 +86,12 @@ const Home = () => {
                 <Clock size={20} className="meta-icon" />
                 <span>{featuredEvent.time}</span>
               </div>
-              <div className="meta-item-new">
-                <MapPin size={20} className="meta-icon" />
-                <span>{featuredEvent.venue}</span>
+              <div className="meta-item-new" style={{ alignItems: 'flex-start' }}>
+                <MapPin size={20} className="meta-icon" style={{ marginTop: '0.3rem' }} />
+                <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+                  <span>{featuredEvent.venue.split(',')[0]}</span>
+                  <span style={{ opacity: 0.8, fontSize: '0.85em' }}>{featuredEvent.venue.split(',')[1]?.trim()}</span>
+                </div>
               </div>
             </div>
             <div className="hero-actions">
@@ -102,7 +105,7 @@ const Home = () => {
 
       <section id="now-showing" className="events-list-section">
         <div className="container">
-          <h2 className="section-title">Vaijayanta / Nangi Awaazien</h2>
+          <h2 className="section-title">Nangi Awazein</h2>
           <div className="events-grid">
             {events.map((event) => (
               <div key={event.id} className="event-card">
@@ -111,7 +114,13 @@ const Home = () => {
                   <h3>{event.title}</h3>
                   <div className="event-card-meta">
                     <p><Calendar size={20} /> {new Date(event.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                    <p><MapPin size={20} /> {event.venue}</p>
+                    <p style={{ alignItems: 'flex-start' }}>
+                      <MapPin size={20} style={{ marginTop: '0.2rem' }} /> 
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span>{event.venue.split(',')[0]}</span>
+                        <span style={{ fontSize: '0.9em', opacity: 0.8 }}>{event.venue.split(',')[1]?.trim()}</span>
+                      </div>
+                    </p>
                   </div>
                   <p className="event-card-desc">{event.description}</p>
                   <button onClick={() => handleBookNow(event.id)}>

@@ -5,10 +5,10 @@ const AppContext = createContext();
 const INITIAL_EVENTS = [
   {
     id: 1,
-    title: "Vaijayanta / Nangi Awaazien",
+    title: "Nangi Awazein",
     date: "2026-04-26",
     time: "6:00 PM onwards",
-    venue: "Lokmanya Rang Mandir, Belgaum",
+    venue: "Lokmanya RangMandir, Belgaum",
     description: "दोन उत्कृष्ट नाटकांचा संगम! 'वैजयंता' आणि 'नंगी आवाजें' या दोन्ही नाटकांचे सादरीकरण अनुभवा. मराठी रंगभूमीवरील ही एक अविस्मरणीय मेजवानी असेल.",
     ticketPrice: "299 / 249",
     upiId: "theatre-admin@upi",

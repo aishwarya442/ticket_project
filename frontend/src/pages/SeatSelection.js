@@ -46,7 +46,14 @@ const BookingForm = () => {
           </Link>
           <div className="event-info-mini">
             <h1>{event.title}</h1>
-            <p>{event.venue} | {new Date(event.date).toLocaleDateString()} | {event.time}</p>
+            <p>
+              <span className="venue-main">{event.venue.split(',')[0]}</span>
+              <span className="venue-city" style={{ opacity: 0.8, fontSize: '0.9em', marginLeft: '8px' }}>({event.venue.split(',')[1]?.trim()})</span>
+              <span style={{ margin: '0 10px', opacity: 0.5 }}>|</span> 
+              {new Date(event.date).toLocaleDateString()} 
+              <span style={{ margin: '0 10px', opacity: 0.5 }}>|</span> 
+              {event.time}
+            </p>
           </div>
         </div>
 

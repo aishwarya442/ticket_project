@@ -54,7 +54,7 @@ module.exports = async (req, res) => {
               </tr>
               <tr>
                 <td style="padding: 8px 0; color: #666666; font-weight: 600;">Venue:</td>
-                <td style="padding: 8px 0; color: #000000;">${venue || 'Lokmanya Rang Mandir, Belgaum'}</td>
+                <td style="padding: 8px 0; color: #000000;">${(venue || 'Lokmanya RangMandir, Belgaum').split(',')[0]}<br/><span style="font-size: 13px; color: #666666;">${(venue || 'Lokmanya RangMandir, Belgaum').split(',')[1]?.trim()}</span></td>
               </tr>
               <tr style="border-top: 1px solid #eeeeee;">
                 <td style="padding: 15px 0 8px 0; color: #666666; font-weight: 600;">Seats:</td>

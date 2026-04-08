@@ -18,36 +18,36 @@
 // You can edit these details whenever you have a new drama show!
 var EVENT_DETAILS = {
   id: 1,
-  title: "Vaijayanta / Nangi Awaazien",
+  title: "Nangi Awazein",
   description: "दोन उत्कृष्ट नाटकांचा संगम! 'वैजयंता' आणि 'नंगी आवाजें' या दोन्ही नाटकांचे सादरीकरण अनुभवा.",
   date: "2026-04-26",
   time: "6:00 PM onwards",
-  venue: "Lokmanya Rang Mandir, Belgaum",
+  venue: "Lokmanya RangMandir, Belgaum",
   ticketPrice: "299 / 249",
   upiId: "theatre-admin@upi",
-  total_capacity: 200
+  total_capacity: 500
 };
 
 function doGet(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = sheet.getDataRange().getValues();
   var bookedSeats = [];
-  
+
   // Assuming row 1 is Headers. 
   // We assume column "Seats" is saved at Index 5 (Column F).
   if (data.length > 1) {
     for (var i = 1; i < data.length; i++) {
-      var seatsStr = data[i][5]; 
+      var seatsStr = data[i][5];
       if (seatsStr) {
-        var seats = String(seatsStr).split(',').map(function(s) { return s.trim(); });
+        var seats = String(seatsStr).split(',').map(function (s) { return s.trim(); });
         bookedSeats = bookedSeats.concat(seats);
       }
     }
   }
-  
+
   var eventData = EVENT_DETAILS;
   eventData.booked_seats = bookedSeats;
-  
+
   // Return JSON list to match old Django API format
   return ContentService.createTextOutput(JSON.stringify([eventData]))
     .setMimeType(ContentService.MimeType.JSON);
@@ -57,12 +57,12 @@ function doPost(e) {
   try {
     var payload = JSON.parse(e.postData.contents);
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    
+
     // Create headers if the sheet is completely empty
     if (sheet.getLastRow() === 0) {
       sheet.appendRow(["Name", "Email", "Phone", "Tickets Count", "Amount", "Seats", "UTR", "Timestamp"]);
     }
-    
+
     var timestamp = new Date();
     sheet.appendRow([
       payload.name || "",
@@ -74,24 +74,24 @@ function doPost(e) {
       payload.utr || "",
       timestamp
     ]);
-    
+
     // --- SEND CONFIRMATION EMAIL ---
     if (payload.email) {
       sendConfirmationEmail(payload);
     }
-    
-    return ContentService.createTextOutput(JSON.stringify({"status": "Success"}))
+
+    return ContentService.createTextOutput(JSON.stringify({ "status": "Success" }))
       .setMimeType(ContentService.MimeType.JSON);
-      
-  } catch(error) {
-    return ContentService.createTextOutput(JSON.stringify({"error": error.toString()}))
+
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ "error": error.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
 function sendConfirmationEmail(data) {
   var subject = "Your Drama Ticket";
-  
+
   // Format Booking ID like DRAMA766844
   // We use last 6 chars of payment ID or a random number
   var shortId = (data.paymentId || data.utr || "").toString().replace(/[^a-zA-Z0-9]/g, '').slice(-6).toUpperCase();
@@ -132,7 +132,7 @@ function sendConfirmationEmail(data) {
       <p style="margin: 0; font-size: 16px;">Thank you for booking! 🎉</p>
     </div>
   `;
-  
+
   try {
     MailApp.sendEmail({
       to: data.email,

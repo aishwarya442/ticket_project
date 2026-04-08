@@ -120,7 +120,10 @@ const Ticket = () => {
               </div>
               <div className="ticket-info">
                 <p className="label">Venue</p>
-                <p className="value">{event?.venue}</p>
+                <p className="value">
+                  {event?.venue?.split(',')[0]}<br/>
+                  <span style={{fontSize: '0.9em', opacity: 0.8}}>{event?.venue?.split(',')[1]?.trim()}</span>
+                </p>
               </div>
               <div className="ticket-info">
                 <p className="label">Category</p>
