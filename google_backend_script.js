@@ -90,57 +90,46 @@ function doPost(e) {
 }
 
 function sendConfirmationEmail(data) {
-  var subject = "Booking Confirmed: " + (data.eventTitle || "Drama Tickets");
+  var subject = "Your Drama Ticket";
   
+  // Format Booking ID like DRAMA766844
+  // We use last 6 chars of payment ID or a random number
+  var shortId = (data.paymentId || data.utr || "").toString().replace(/[^a-zA-Z0-9]/g, '').slice(-6).toUpperCase();
+  if (!shortId || shortId.length < 6) {
+    shortId = Math.floor(100000 + Math.random() * 900000).toString();
+  }
+  var bookingDisplayId = "DRAMA" + shortId;
+
+  // Format Seats
+  var seatsList = (data.seats && Array.isArray(data.seats)) ? data.seats.join(', ') : (data.seats || "N/A");
+
   var htmlBody = `
-    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 12px; overflow: hidden; background-color: #ffffff;">
-      <div style="background-color: #000000; padding: 30px; text-align: center; border-bottom: 4px solid #e50914;">
-        <h1 style="color: #ffffff; margin: 0; letter-spacing: 2px; font-weight: 800;">RANGABHOOMI</h1>
-        <p style="color: #d4af37; margin: 5px 0 0 0; font-size: 14px; text-transform: uppercase;">Drama Ticket Confirmation</p>
+    <div style="background-color: #1a1110; color: #ffffff; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 40px 20px; max-width: 500px; margin: auto; line-height: 1.6; border-radius: 8px;">
+      <div style="text-align: left; margin-bottom: 25px;">
+        <span style="font-size: 18px; font-weight: bold;">🎭 DRAMA TICKET RECEIPT 🎭</span>
       </div>
       
-      <div style="padding: 40px 30px; line-height: 1.6; color: #333333;">
-        <h2 style="color: #000000; margin-top: 0; font-size: 24px;">Thank you for your booking, ${data.name}!</h2>
-        <p style="font-size: 16px;">We are excited to confirm your tickets for the upcoming show. Your payment was successful and your seats are reserved.</p>
-        
-        <div style="background-color: #f9f9f9; padding: 25px; border-radius: 8px; margin: 25px 0; border: 1px solid #eeeeee;">
-          <h3 style="margin-top: 0; color: #e50914; font-size: 18px; border-bottom: 1px solid #eeeeee; padding-bottom: 10px;">Show Details</h3>
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-              <td style="padding: 8px 0; color: #666666; font-weight: 600; width: 120px;">Event:</td>
-              <td style="padding: 8px 0; color: #000000; font-weight: 700;">${data.eventTitle || "Special Show"}</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; color: #666666; font-weight: 600;">Tickets:</td>
-              <td style="padding: 8px 0; color: #000000;">${data.ticketsCount} Ticket(s)</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; color: #666666; font-weight: 600;">Category:</td>
-              <td style="padding: 8px 0; color: #000000;">${data.seatCategory || "General"}</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; color: #666666; font-weight: 600;">Payment ID:</td>
-              <td style="padding: 8px 0; color: #000000; font-family: monospace; font-size: 14px;">${data.paymentId || data.utr || "N/A"}</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; color: #666666; font-weight: 600;">Amount Paid:</td>
-              <td style="padding: 8px 0; color: #e50914; font-weight: 700; font-size: 18px;">₹${data.amount}</td>
-            </tr>
-          </table>
-        </div>
-        
-        <p style="font-size: 14px; color: #666666; font-style: italic;">Note: Please carry this email (digital or print) to the venue for entry. In case of any issues, contact us at +91 7483173365.</p>
-        
-        <div style="text-align: center; margin-top: 30px;">
-          <p style="margin-bottom: 5px; font-weight: 600;">We look forward to seeing you at the theatre!</p>
-          <div style="width: 50px; height: 3px; background-color: #e50914; margin: 10px auto;"></div>
-        </div>
+      <p style="margin: 0 0 15px 0; font-size: 16px;">Hello ${data.name || 'Customer'},</p>
+      
+      <p style="margin: 0 0 25px 0; font-size: 16px;">✅ Your booking is CONFIRMED!</p>
+      
+      <p style="margin: 0 0 20px 0; letter-spacing: 1px; color: #666;">--------------------------</p>
+      
+      <div style="margin: 0 0 20px 0; font-size: 15px;">
+        <p style="margin: 8px 0;">🎟️ Booking ID: ${bookingDisplayId}</p>
+        <p style="margin: 8px 0;">🎭 Event: ${data.eventTitle || "Drama Performance"}</p>
+        <p style="margin: 8px 0;">👤 Name: ${data.name}</p>
+        <p style="margin: 8px 0;">📞 Phone: ${data.phone}</p>
+        <p style="margin: 8px 0;">🎫 Tickets: ${data.ticketsCount} (${data.seatCategory || 'General'})</p>
+        <p style="margin: 8px 0;">💺 Seats: ${seatsList}</p>
+        <p style="margin: 8px 0;">💰 Status: Paid</p>
       </div>
       
-      <div style="background-color: #f5f5f5; padding: 20px; text-align: center; font-size: 12px; color: #888888; border-top: 1px solid #eeeeee;">
-        <p style="margin: 0;">&copy; 2024 Rangabhoomi Theatre. All rights reserved.</p>
-        <p style="margin: 5px 0 0 0;">Lokmanya Rang Mandir, Belgaum</p>
-      </div>
+      <p style="margin: 0 0 25px 0; letter-spacing: 1px; color: #666;">--------------------------</p>
+      
+      <p style="margin: 0 0 20px 0; font-size: 15px;">📍 Show this email at entry.</p>
+      
+      <p style="margin: 0; font-size: 16px;">Thank you for booking! 🎉</p>
     </div>
   `;
   
