@@ -196,6 +196,97 @@
   color: var(--text-secondary);
 }
 
+.ticket-summary {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.summary-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.summary-card p {
+  margin: 0.8rem 0;
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 0.5rem;
+}
+
+.summary-card b {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.instructions-card {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-left: 5px solid var(--primary-color);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.instructions-card h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.instructions-card ul {
+  padding-left: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.instructions-card li {
+  margin-bottom: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.thanks-note {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.production-signature {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 1.2rem;
+  border-radius: 8px;
+}
+
+.production-signature p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.production-signature .company-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-top: 0.3rem;
+}
+
+.production-signature .company-name.highlight {
+  color: var(--text-primary);
+}
+
 @media (max-width: 600px) {
   .ticket-grid {
     grid-template-columns: 1fr;
@@ -204,5 +295,14 @@
 
   .ticket-header h2 {
     font-size: 1.4rem;
+  }
+
+  .instructions-card {
+    padding: 1.5rem;
+  }
+  
+  .summary-card p {
+    flex-direction: column;
+    gap: 0.2rem;
   }
 }

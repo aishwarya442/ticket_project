@@ -17,7 +17,7 @@ if not Event.objects.exists():
         title="Natasamrat - The Great Maratha Drama",
         date="2026-04-15",
         time="18:30:00",
-        venue="Lokmanya RangMandir, Belgaum",
+        venue="Lokmanya Rangmandir, Belgaum",
         description="Experience the legendary Marathi classic exploring the tragic life of a veteran stage actor. A masterpiece of Indian theatre.",
         ticketPrice=500,
         upiId="dramatickets@ybl",

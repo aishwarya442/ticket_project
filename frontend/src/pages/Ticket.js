@@ -75,8 +75,16 @@ const Ticket = () => {
     }
   };
 
+  const getBookingDisplayId = () => {
+    if (!booking) return '';
+    const id = (booking.paymentId || booking.utr || "").toString().replace(/[^a-zA-Z0-9]/g, '').slice(-6).toUpperCase();
+    return id ? `DRAMA${id}` : booking.bookingId;
+  };
+
   if (loading) return <div className="container">Loading...</div>;
   if (!booking) return <Navigate to="/" replace />;
+
+  const displayId = getBookingDisplayId();
 
   return (
     <div className="ticket-page container">
@@ -85,6 +93,39 @@ const Ticket = () => {
         <h1 className="section-title" style={{marginBottom: '0.5rem'}}>Booking Confirmed!</h1>
         <p style={{fontSize: '1.1rem', opacity: 0.9}}>Your e-ticket is ready. Please click the button below to <b>Confirm on WhatsApp</b>.</p>
         <div style={{marginTop: '0.5rem', fontSize: '0.9rem', color: 'var(--accent-color)'}}>This is required for entry verification.</div>
+      </div>
+
+      <div className="ticket-summary">
+        <div className="summary-card">
+          <p>🎟️ <b>Booking ID:</b> {displayId}</p>
+          <p>🎭 <b>Event:</b> {event?.title}</p>
+          <p>👤 <b>Name:</b> {booking.name}</p>
+          <p>📞 <b>Phone:</b> {booking.phone}</p>
+          <p>🎫 <b>Tickets:</b> {booking.ticketsCount} ({booking.seatCategory || 'General'})</p>
+          <p>💺 <b>Seats:</b> {booking.seats ? booking.seats.join(', ') : 'N/A'}</p>
+          <p>💰 <b>Status:</b> Paid</p>
+        </div>
+
+        <div className="instructions-card">
+          <h3>📢 Important Instructions</h3>
+          <ul>
+            <li>You can collect your tickets on the day of the show at the ticket counter.</li>
+            <li>This will allow all members booked at once only, and tickets will be marked at the entry door.</li>
+            <li><b>Remember:</b> Theatre doors open only at <b>6:00 PM</b>.</li>
+            <li>Seating allotments are on a <b>First-Come-First-Serve</b> basis.</li>
+            <li>Seating numbers will be written behind the tickets for reference.</li>
+          </ul>
+          
+          <div className="thanks-note">
+            <p>Thank you for booking the <b>Belgaum Theatre Festival 2026</b>!</p>
+          </div>
+
+          <div className="production-signature">
+            <p>Regards,</p>
+            <p className="company-name">Page To Stage Productions</p>
+            <p className="company-name highlight">Revise Productions</p>
+          </div>
+        </div>
       </div>
 
       <div className="ticket-actions main-actions">
@@ -112,7 +153,7 @@ const Ticket = () => {
             <div className="ticket-grid">
               <div className="ticket-info">
                 <p className="label">Booking ID</p>
-                <p className="value">{booking.bookingId}</p>
+                <p className="value">{displayId}</p>
               </div>
               <div className="ticket-info">
                 <p className="label">Date & Time</p>

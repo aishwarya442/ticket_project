@@ -5,10 +5,10 @@ const AppContext = createContext();
 const INITIAL_EVENTS = [
   {
     id: 1,
-    title: "Nangi Awazein",
-    date: "2026-04-26",
+    title: "Vaijanta / Nangi Awazein",
+    date: "2026-04-25",
     time: "6:00 PM onwards",
-    venue: "Lokmanya RangMandir, Belgaum",
+    venue: "Lokmanya Rangmandir, Belgaum",
     description: "दोन उत्कृष्ट नाटकांचा संगम! 'वैजयंता' आणि 'नंगी आवाजें' या दोन्ही नाटकांचे सादरीकरण अनुभवा. मराठी रंगभूमीवरील ही एक अविस्मरणीय मेजवानी असेल.",
     ticketPrice: "299 / 249",
     upiId: "theatre-admin@upi",
@@ -50,13 +50,14 @@ export const AppProvider = ({ children }) => {
       const GOOGLE_SCRIPT_URL = process.env.REACT_APP_GOOGLE_SCRIPT_URL;
       if (GOOGLE_SCRIPT_URL) {
         try {
+          // We use simple fetch without custom headers to avoid CORS preflight (OPTIONS)
+          // Google Apps Script doesn't handle OPTIONS well.
           await fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+            mode: 'no-cors', // Important for Google Apps Script redirects
             body: JSON.stringify(finalBooking)
           });
-          console.log("Booking saved to Google Sheets");
+          console.log("Booking submission sent (no-cors)");
         } catch (err) {
           console.error("Failed to save to Google Sheets:", err);
         }

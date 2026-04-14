@@ -18,11 +18,11 @@
 // You can edit these details whenever you have a new drama show!
 var EVENT_DETAILS = {
   id: 1,
-  title: "Nangi Awazein",
+  title: "Vaijanta / Nangi Awazein",
   description: "दोन उत्कृष्ट नाटकांचा संगम! 'वैजयंता' आणि 'नंगी आवाजें' या दोन्ही नाटकांचे सादरीकरण अनुभवा.",
-  date: "2026-04-26",
+  date: "2026-04-25",
   time: "6:00 PM onwards",
-  venue: "Lokmanya RangMandir, Belgaum",
+  venue: "Lokmanya Rangmandir, Belgaum",
   ticketPrice: "299 / 249",
   upiId: "theatre-admin@upi",
   total_capacity: 500
@@ -55,7 +55,22 @@ function doGet(e) {
 
 function doPost(e) {
   try {
-    var payload = JSON.parse(e.postData.contents);
+    var contents = e.postData.contents;
+    var payload;
+
+    // Attempt to parse JSON
+    try {
+      payload = JSON.parse(contents);
+    } catch (err) {
+      // Fallback: Check if it's in parameters (form data)
+      payload = e.parameter;
+      if (!payload.name && !payload.email) {
+        // If still nothing, it might be a different format
+        return ContentService.createTextOutput(JSON.stringify({ "error": "Could not parse data", "received": contents }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
     // Create headers if the sheet is completely empty
@@ -65,26 +80,31 @@ function doPost(e) {
 
     var timestamp = new Date();
     sheet.appendRow([
-      payload.name || "",
-      payload.email || "",
-      payload.phone || "",
+      payload.name || "N/A",
+      payload.email || "N/A",
+      payload.phone || "N/A",
       payload.ticketsCount || 0,
       payload.amount || 0,
-      (payload.seats || []).join(', '), // Save array as comma-separated string
-      payload.utr || "",
+      (payload.seats ? (Array.isArray(payload.seats) ? payload.seats.join(', ') : payload.seats) : "N/A"),
+      payload.utr || payload.paymentId || "N/A",
       timestamp
     ]);
 
-    // --- SEND CONFIRMATION EMAIL ---
-    if (payload.email) {
-      sendConfirmationEmail(payload);
+    // Send confirmation email if email exists
+    if (payload.email && payload.email !== "N/A") {
+      try {
+        sendConfirmationEmail(payload);
+      } catch (emailErr) {
+        Logger.log("Email error: " + emailErr.toString());
+      }
     }
 
-    return ContentService.createTextOutput(JSON.stringify({ "status": "Success" }))
+    return ContentService.createTextOutput(JSON.stringify({ "status": "Success", "id": payload.name }))
       .setMimeType(ContentService.MimeType.JSON);
 
   } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({ "error": error.toString() }))
+    Logger.log("Critical doPost error: " + error.toString());
+    return ContentService.createTextOutput(JSON.stringify({ "status": "Error", "message": error.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
@@ -127,9 +147,22 @@ function sendConfirmationEmail(data) {
       
       <p style="margin: 0 0 25px 0; letter-spacing: 1px; color: #666;">--------------------------</p>
       
-      <p style="margin: 0 0 20px 0; font-size: 15px;">📍 Show this email at entry.</p>
+      <div style="margin: 0 0 25px 0; font-size: 14px; background-color: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border-left: 4px solid #e50914;">
+        <p style="margin: 0 0 10px 0; font-weight: bold; color: #e50914;">📢 IMPORTANT INSTRUCTIONS:</p>
+        <p style="margin: 0 0 10px 0;">• You can collect your tickets on the day of the show at the ticket counter.</p>
+        <p style="margin: 0 0 10px 0;">• This will allow all members booked at once only, and tickets will be marked at the entry door.</p>
+        <p style="margin: 0 0 10px 0;">• <b>Remember:</b> Theatre doors open only at <b>6:00 PM</b>.</p>
+        <p style="margin: 0 0 10px 0;">• Seating is on a <b>First-Come-First-Serve</b> basis.</p>
+        <p style="margin: 0 0 0 0;">• Seating numbers will be written behind the tickets for reference.</p>
+      </div>
+
+      <p style="margin: 0 0 20px 0; font-size: 15px;">Thank you for booking the <b>Belgaum Theatre Festival 2026</b>!</p>
       
-      <p style="margin: 0; font-size: 16px;">Thank you for booking! 🎉</p>
+      <div style="margin: 20px 0 0 0; font-size: 15px; border-top: 1px solid #333; padding-top: 15px;">
+        <p style="margin: 0;">Regards,</p>
+        <p style="margin: 5px 0 0 0; font-weight: bold; color: #e50914;">Page To Stage Productions</p>
+        <p style="margin: 2px 0 0 0; font-weight: bold;">Revise Productions</p>
+      </div>
     </div>
   `;
 

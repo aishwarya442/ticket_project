@@ -105,7 +105,7 @@ const Home = () => {
 
       <section id="now-showing" className="events-list-section">
         <div className="container">
-          <h2 className="section-title">Nangi Awazein</h2>
+          <h2 className="section-title">Vaijanta / Nangi Awazein</h2>
           <div className="events-grid">
             {events.map((event) => (
               <div key={event.id} className="event-card">
